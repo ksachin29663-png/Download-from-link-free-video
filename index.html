@@ -53,3 +53,61 @@
 </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Video Downloader | Download HD Videos & Thumbnails</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 50px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { color: #1a73e8; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+        .result { margin-top: 20px; padding: 15px; border-top: 1px solid #eee; }
+        nav { text-align: center; margin-bottom: 20px; }
+        nav a { margin: 0 10px; color: #555; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html">होम</a>
+        <a href="about.html">अबाउट</a>
+        <a href="privacy.html">प्राइवेसी</a>
+    </nav>
+    <h1>वीडियो डाउनलोडर</h1>
+    <input type="text" id="url" placeholder="वीडियो लिंक पेस्ट करें (YT, FB, Insta)...">
+    <button onclick="process()">डाउनलोड लिंक निकालें</button>
+    <div id="result" class="result"></div>
+</div>
+
+<script>
+    async function process() {
+        const url = document.getElementById('url').value;
+        const result = document.getElementById('result');
+        if(!url) { alert("लिंक डालें"); return; }
+        result.innerHTML = "वीडियो प्रोसेस हो रहा है...";
+        
+        try {
+            const res = await fetch(`/api?url=${encodeURIComponent(url)}`);
+            const data = await res.json();
+            if(data.downloadUrl) {
+                result.innerHTML = `
+                    <h3>${data.title}</h3>
+                    <img src="${data.thumbnail}" style="width:100%; border-radius:8px;">
+                    <br><br>
+                    <a href="${data.downloadUrl}" target="_blank" style="display:block; padding:10px; background:#28a745; color:white; text-align:center; text-decoration:none; border-radius:5px;">वीडियो डाउनलोड करें</a>
+                `;
+            } else {
+                result.innerHTML = "वीडियो नहीं मिल पाया। लिंक सही है?";
+            }
+        } catch (e) {
+            result.innerHTML = "सर्वर एरर, फिर से कोशिश करें।";
+        }
+    }
+</script>
+</body>
+</html>
