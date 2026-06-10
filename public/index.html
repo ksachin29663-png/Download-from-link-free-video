@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<input id="url" />
+<button onclick="send()">Send</button>
+
+<script>
+async function send() {
+  const url = document.getElementById("url").value;
+
+  const res = await fetch("/api/metadata", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ url })
+  });
+
+  const data = await res.json();
+  console.log(data);
+}
+</script>
+
+</body>
+</html>
