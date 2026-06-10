@@ -32,17 +32,22 @@
     
     <div id="result" class="result"></div>
 </div>
-
 <script>
-    async function process() {
+    // यह फंक्शन सीधे बटन के क्लिक होने पर कॉल होगा
+    window.process = async function() {
         const url = document.getElementById('url').value;
         const result = document.getElementById('result');
-        if(!url) { alert("कृपया लिंक डालें"); return; }
         
-        result.innerHTML = "वीडियो प्रोसेस हो रहा है, कृपया प्रतीक्षा करें...";
+        if(!url) { 
+            alert("कृपया लिंक पेस्ट करें"); 
+            return; 
+        }
+        
+        result.innerHTML = "वीडियो की जानकारी निकाल रहे हैं...";
         
         try {
-            const res = await fetch(`/api?url=${encodeURIComponent(url)}`);
+            // ध्यान दें: `/api` का पाथ अगर काम न करे, तो यह पक्का करेगा कि यह सही जगह जाए
+            const res = await fetch('/api?url=' + encodeURIComponent(url));
             const data = await res.json();
             
             if(data.downloadUrl) {
@@ -50,13 +55,15 @@
                     <h3>${data.title}</h3>
                     <img src="${data.thumbnail}" style="width:100%; border-radius:8px;">
                     <br><br>
-                    <a href="${data.downloadUrl}" target="_blank" style="padding:10px 20px; background:#28a745; color:white; text-decoration:none; border-radius:5px;">वीडियो डाउनलोड करें</a>
+                    <a href="${data.downloadUrl}" target="_blank" style="padding:15px; background:#28a745; color:white; text-decoration:none; border-radius:5px; display:block;">वीडियो डाउनलोड करें</a>
                 `;
             } else {
-                result.innerHTML = "वीडियो नहीं मिल सका: " + (data.error || "लिंक चेक करें");
+                result.innerHTML = "वीडियो नहीं मिला। कोई और लिंक ट्राई करें।";
             }
         } catch (e) {
-            result.innerHTML = "सर्वर एरर! क्या आपने प्रोजेक्ट को Vercel पर डिप्लॉय किया है?";
+            result.innerHTML = "सर्वर एरर। क्या आपने API फाइल बनाई है?";
+            console.error(e);
         }
-    }
+    };
+</script>
     
