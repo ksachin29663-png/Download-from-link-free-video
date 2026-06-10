@@ -1,6 +1,4 @@
 {
-  "name": "video-downloader",
-  "version": "1.0.0",
   "dependencies": {
     "ytdl-core": "latest"
   }
