@@ -37,12 +37,14 @@
     async function process() {
         const url = document.getElementById('url').value;
         const result = document.getElementById('result');
-        if(!url) { alert("कृपया पहले लिंक पेस्ट करें"); return; }
-        result.innerHTML = "वीडियो प्रोसेस हो रहा है...";
+        if(!url) { alert("कृपया लिंक डालें"); return; }
+        
+        result.innerHTML = "वीडियो प्रोसेस हो रहा है, कृपया प्रतीक्षा करें...";
         
         try {
             const res = await fetch(`/api?url=${encodeURIComponent(url)}`);
             const data = await res.json();
+            
             if(data.downloadUrl) {
                 result.innerHTML = `
                     <h3>${data.title}</h3>
@@ -51,13 +53,10 @@
                     <a href="${data.downloadUrl}" target="_blank" style="padding:10px 20px; background:#28a745; color:white; text-decoration:none; border-radius:5px;">वीडियो डाउनलोड करें</a>
                 `;
             } else {
-                result.innerHTML = "वीडियो नहीं मिल पाया।";
+                result.innerHTML = "वीडियो नहीं मिल सका: " + (data.error || "लिंक चेक करें");
             }
         } catch (e) {
-            result.innerHTML = "सर्वर एरर, फिर से कोशिश करें।";
+            result.innerHTML = "सर्वर एरर! क्या आपने प्रोजेक्ट को Vercel पर डिप्लॉय किया है?";
         }
     }
-</script>
-
-</body>
-</html>
+    
